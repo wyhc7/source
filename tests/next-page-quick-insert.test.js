@@ -42,6 +42,11 @@ function assertNextPageQuickInsertWired(file) {
   );
   assert.match(
     source,
+    /id="quickNextPageRuleBtn"[^>]*>预设规则<\/button>/,
+    `${file} labels the shortcut as preset rule`
+  );
+  assert.match(
+    source,
     /quickNextPageRuleBtn\.addEventListener\('mousedown'/,
     `${file} prevents focus-loss blur before the shortcut click`
   );

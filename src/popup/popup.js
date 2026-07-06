@@ -829,7 +829,7 @@ function renderFields() {
 
   const useJsIndex = fieldData.useJsIndex || false;
   const nextPageQuickInsertHTML = isNextPageQuickInsertField(field.key)
-    ? `<button id="quickNextPageRuleBtn" class="btn btn-action" title="插入 ${escapeHtml(NEXT_PAGE_QUICK_INSERT_RULE)}">插入下一页</button>`
+    ? `<button id="quickNextPageRuleBtn" class="btn btn-action" title="插入 ${escapeHtml(NEXT_PAGE_QUICK_INSERT_RULE)}">预设规则</button>`
     : '';
 
   const indexHTML = (isNativeListField
