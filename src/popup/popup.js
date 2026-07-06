@@ -2562,13 +2562,30 @@ function closeModal() {
   document.getElementById('exportModal').classList.add('hidden');
 }
 
+function getResetPreservedDebugState() {
+  const debugIp = Array.isArray(state.debugIp)
+    ? state.debugIp.slice(0, 4)
+    : DEFAULT_STATE.debugIp.slice();
+  while (debugIp.length < 4) debugIp.push('');
+
+  return {
+    debugIp,
+    debugPort: typeof state.debugPort === 'string' ? state.debugPort : DEFAULT_STATE.debugPort,
+  };
+}
+
 function handleReset() {
   if (!confirm('确定要重置所有进度吗？')) return;
 
+  const preservedDebugState = getResetPreservedDebugState();
+
   // Reset state from default — single source of truth, no manual field sync needed
   state = structuredClone(DEFAULT_STATE);
+  state.debugIp = preservedDebugState.debugIp;
+  state.debugPort = preservedDebugState.debugPort;
 
-  chrome.storage.local.remove(['legadoSourceState', 'exploreEditorState']);
+  chrome.storage.local.remove(['exploreEditorState']);
+  chrome.storage.local.set({ legadoSourceState: state });
 
   // Reset DOM elements
   document.getElementById('bookSourceName').value = '';
@@ -2586,24 +2603,6 @@ function handleReset() {
   document.getElementById('searchBodyTemplate').value = '';
 
   renderHeaderItems();
-
-  // Reset debug panel
-  document.getElementById('debugKey').value = '';
-  document.getElementById('debugResult').textContent = '';
-  const debugIpParts = document.querySelectorAll('#debugIp1, #debugIp2, #debugIp3, #debugIp4');
-  debugIpParts.forEach(el => el.value = '');
-  document.getElementById('debugPort').value = '';
-  if (debugWs) {
-    debugWs.close();
-    debugWs = null;
-  }
-  debugFinished = false;
-  if (debugTimeout) {
-    clearTimeout(debugTimeout);
-    debugTimeout = null;
-  }
-  document.getElementById('debugStartBtn').disabled = false;
-  document.getElementById('debugStopBtn').disabled = true;
 
   if (typeof window.clearExploreEditor === 'function') {
     window.clearExploreEditor();
