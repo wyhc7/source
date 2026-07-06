@@ -7,6 +7,8 @@ const LIST_SCOPED_FIELDS = {
   toc: ['chapterName', 'chapterUrl', 'isVolume', 'updateTime', 'isVip', 'isPay'],
 };
 const DEBUG_PREFIX = '<js>java.log("输入:" + result);</js>';
+const NEXT_PAGE_QUICK_INSERT_RULE = 'text.下一页@href';
+const NEXT_PAGE_QUICK_INSERT_FIELDS = ['nextTocUrl', 'nextContentUrl'];
 
 const RULE_TYPES = {
   explore: {
@@ -136,6 +138,10 @@ function isListFieldKey(fieldKey) {
 
 function isListScopedField(ruleType, fieldKey) {
   return (LIST_SCOPED_FIELDS[ruleType] || []).includes(fieldKey);
+}
+
+function isNextPageQuickInsertField(fieldKey) {
+  return NEXT_PAGE_QUICK_INSERT_FIELDS.includes(fieldKey);
 }
 
 function renderModeTabs() {
@@ -822,6 +828,9 @@ function renderFields() {
     : fieldData.previews;
 
   const useJsIndex = fieldData.useJsIndex || false;
+  const nextPageQuickInsertHTML = isNextPageQuickInsertField(field.key)
+    ? `<button id="quickNextPageRuleBtn" class="btn btn-action" title="插入 ${escapeHtml(NEXT_PAGE_QUICK_INSERT_RULE)}">插入下一页</button>`
+    : '';
 
   const indexHTML = (isNativeListField
     ? `<div class="index-row">
@@ -885,6 +894,7 @@ function renderFields() {
         ${fieldState === 'picking' ? `<button id="cancelBtn" class="btn btn-action btn-cancel">取消选择</button>` : ''}
         <button id="skipBtn" class="btn btn-action">跳过</button>
         <button id="confirmBtn" class="btn btn-action">确认输入</button>
+        ${nextPageQuickInsertHTML}
         ${isLinkField ? `<button id="webViewBtn" class="btn btn-action${fieldData.webView ? ' btn-active' : ''}">webView${fieldData.webView ? ' ✓' : ''}</button>` : ''}
         ${fieldState === 'selected' ? `<button id="clearBtn" class="btn btn-action btn-clear">清空</button>` : ''}
       </div>
@@ -1013,6 +1023,13 @@ function bindFieldEvents() {
     fieldValue.addEventListener('input', handleFieldInput);
     fieldValue.addEventListener('blur', handleFieldBlur);
     autoResizeTextarea(fieldValue);
+  }
+  const quickNextPageRuleBtn = document.getElementById('quickNextPageRuleBtn');
+  if (quickNextPageRuleBtn) {
+    quickNextPageRuleBtn.addEventListener('mousedown', (e) => {
+      e.preventDefault();
+    });
+    quickNextPageRuleBtn.addEventListener('click', handleQuickNextPageRuleInsert);
   }
   const indexStart = document.getElementById('indexStart');
   if (indexStart) indexStart.addEventListener('input', handleIndexInput);
@@ -1345,6 +1362,33 @@ function handleClearField() {
   renderFields();
   renderFieldStatusSummary();
   updateStepIndicator();
+}
+
+function handleQuickNextPageRuleInsert() {
+  const fields = getFields();
+  const rule = getRuleState();
+  const field = fields[rule.currentStep];
+
+  if (!field || !isNextPageQuickInsertField(field.key)) return;
+
+  if (!rule.fields[field.key]) {
+    rule.fields[field.key] = { value: '', state: 'selected', rawSelector: '' };
+  }
+
+  const fieldData = rule.fields[field.key];
+  const value = applyDebugPrefix(NEXT_PAGE_QUICK_INSERT_RULE, !!fieldData.debug);
+
+  fieldData.value = value;
+  fieldData.rawSelector = NEXT_PAGE_QUICK_INSERT_RULE;
+  fieldData.state = 'selected';
+  rule.fieldStates[field.key] = 'selected';
+
+  saveState();
+  renderFieldStatusSummary();
+  updateStepIndicator();
+  renderFields();
+
+  requestFieldPreview(field.key, NEXT_PAGE_QUICK_INSERT_RULE, '');
 }
 
 function handleIndexInput(e) {
