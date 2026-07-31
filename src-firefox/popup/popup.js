@@ -14,29 +14,29 @@ const RULE_TYPES = {
   explore: {
     label: '发现页',
     fields: [
-      { key: 'bookList', label: '书籍列表', required: true },
-      { key: 'name', label: '书名', required: true },
+      { key: 'bookList', label: '书籍列表', required: false },
+      { key: 'name', label: '书名', required: false },
       { key: 'author', label: '作者', required: false },
       { key: 'kind', label: '分类', required: false },
       { key: 'wordCount', label: '字数', required: false },
       { key: 'lastChapter', label: '最新章节', required: false },
       { key: 'intro', label: '简介', required: false },
       { key: 'coverUrl', label: '封面URL', required: false },
-      { key: 'bookUrl', label: '详情页URL', required: true },
+      { key: 'bookUrl', label: '详情页URL', required: false },
     ],
   },
   search: {
     label: '搜索页',
     fields: [
-      { key: 'bookList', label: '书籍列表', required: true },
-      { key: 'name', label: '书名', required: true },
+      { key: 'bookList', label: '书籍列表', required: false },
+      { key: 'name', label: '书名', required: false },
       { key: 'author', label: '作者', required: false },
       { key: 'kind', label: '分类', required: false },
       { key: 'wordCount', label: '字数', required: false },
       { key: 'lastChapter', label: '最新章节', required: false },
       { key: 'intro', label: '简介', required: false },
       { key: 'coverUrl', label: '封面URL', required: false },
-      { key: 'bookUrl', label: '详情页URL', required: true },
+      { key: 'bookUrl', label: '详情页URL', required: false },
       { key: 'checkKeyWord', label: '校验关键词', required: false },
     ],
   },
@@ -50,15 +50,15 @@ const RULE_TYPES = {
       { key: 'lastChapter', label: '最新章节', required: false },
       { key: 'intro', label: '简介', required: false },
       { key: 'coverUrl', label: '封面URL', required: false },
-      { key: 'tocUrl', label: '目录链接', required: true },
+      { key: 'tocUrl', label: '目录链接', required: false },
     ],
   },
   toc: {
     label: '目录页',
     fields: [
-      { key: 'chapterList', label: '目录列表', required: true },
-      { key: 'chapterName', label: '章节名称', required: true },
-      { key: 'chapterUrl', label: '章节链接', required: true },
+      { key: 'chapterList', label: '目录列表', required: false },
+      { key: 'chapterName', label: '章节名称', required: false },
+      { key: 'chapterUrl', label: '章节链接', required: false },
       { key: 'isVolume', label: '卷名标识', required: false },
       { key: 'updateTime', label: '更新时间', required: false },
       { key: 'isVip', label: 'VIP标识', required: false },
@@ -69,7 +69,7 @@ const RULE_TYPES = {
   content: {
     label: '正文页',
     fields: [
-      { key: 'content', label: '正文内容', required: true },
+      { key: 'content', label: '正文内容', required: false },
       { key: 'subContent', label: '后续正文', required: false },
       { key: 'title', label: '章节标题', required: false },
       { key: 'nextContentUrl', label: '下一页正文', required: false },
@@ -579,7 +579,6 @@ function renderFields() {
             placeholder="请输入脚本内容">${escapeHtml(value)}</textarea>
         </div>
         <div class="field-actions">
-          <button id="skipBtn" class="btn btn-action">跳过</button>
           <button id="lazyLoadBtn" class="btn btn-action">懒加载</button>
           <button id="clearBtn" class="btn btn-action btn-clear">清空</button>
         </div>
@@ -588,7 +587,6 @@ function renderFields() {
     const textarea = document.getElementById('fieldValue');
     textarea.addEventListener('input', handleWebJsInput);
     autoResizeTextarea(textarea);
-    document.getElementById('skipBtn').addEventListener('click', handleSkip);
     document.getElementById('clearBtn').addEventListener('click', handleClearField);
     document.getElementById('lazyLoadBtn').addEventListener('click', () => {
       const contentField = state.rules.content?.fields?.content;
@@ -687,7 +685,6 @@ function renderFields() {
           ${fieldState === 'picking' ? '选择中...' : '选择元素'}
         </button>
         ${fieldState === 'picking' ? `<button id="cancelBtn" class="btn btn-action btn-cancel">取消选择</button>` : ''}
-        <button id="skipBtn" class="btn btn-action">跳过</button>
         <button id="confirmBtn" class="btn btn-action">确认输入</button>
         ${nextPageQuickInsertHTML}
         ${isLinkField ? `<button id="webViewBtn" class="btn btn-action${fieldData.webView ? ' btn-active' : ''}">webView${fieldData.webView ? ' ✓' : ''}</button>` : ''}
@@ -741,7 +738,6 @@ function renderSummaryView(container) {
       pending: '○',
       picking: '◐',
       selected: '●',
-      skipped: '⊘',
     }[fieldState];
 
     const isLinkField = LINK_FIELDS.includes(f.key);
@@ -807,8 +803,6 @@ function bindFieldEvents() {
   if (selectBtn) selectBtn.addEventListener('click', handleSelectElement);
   const cancelBtn = document.getElementById('cancelBtn');
   if (cancelBtn) cancelBtn.addEventListener('click', handleCancelSelection);
-  const skipBtn = document.getElementById('skipBtn');
-  if (skipBtn) skipBtn.addEventListener('click', handleSkip);
   const confirmBtn = document.getElementById('confirmBtn');
   if (confirmBtn) confirmBtn.addEventListener('click', () => {
     document.getElementById('fieldValue')?.blur();
@@ -986,23 +980,6 @@ function handleCancelSelection() {
       chrome.tabs.sendMessage(tabs[0].id, { action: 'stopPicker' });
     }
   });
-}
-
-function handleSkip() {
-  const fields = getFields();
-  const rule = getRuleState();
-  const field = fields[rule.currentStep];
-
-  if (field.required) {
-    if (!confirm(`"${field.label}"是必填字段，确定要跳过吗？`)) {
-      return;
-    }
-  }
-
-  rule.fields[field.key] = { value: '', state: 'skipped', rawSelector: '' };
-  rule.fieldStates[field.key] = 'skipped';
-  saveState();
-  goToNextStep();
 }
 
 function resolvePreviewSelector(input) {
@@ -1520,7 +1497,6 @@ function renderFieldStatusSummary() {
       pending: '○',
       picking: '◐',
       selected: '●',
-      skipped: '⊘',
     }[fieldState];
 
     const activeClass = index === rule.currentStep ? ' active' : '';
@@ -1879,16 +1855,6 @@ function handleNext() {
   if (rule.currentStep === fields.length) {
     handleExport();
     return;
-  }
-
-  const field = fields[rule.currentStep];
-  const fieldState = rule.fieldStates[field.key];
-
-  if (field.required) {
-    if (!fieldState || fieldState === 'pending' || fieldState === 'skipped') {
-      showToast(`请完成必填字段"${field.label}"，或者点击输入框下的跳过按钮`, 'warning');
-      return;
-    }
   }
 
   goToNextStep();
