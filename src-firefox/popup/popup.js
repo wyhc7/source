@@ -486,13 +486,15 @@ function buildJsIndexRule(baseSelector, fieldKey, fieldData, isListField) {
   const listItemTag = fieldData.listItemTagName || '';
   const singleVal = fieldData.listIndex?.single ? parseInt(fieldData.listIndex.single, 10) : 0;
 
-  if (singleVal === 0) {
-    return buildAtSelector(baseSelector, fieldKey, selectedTag, listItemTag);
-  }
-
-  const index = parseSingleIndex(fieldData.listIndex?.single);
+  // JS mode: no index means first match (equivalent to native @ rule);
+  // only fall back to native when the index input is invalid
+  let index = parseSingleIndex(fieldData.listIndex?.single);
   if (index === null) {
-    return buildAtSelector(baseSelector, fieldKey, selectedTag, listItemTag);
+    if (singleVal === 0) {
+      index = 0;
+    } else {
+      return buildAtSelector(baseSelector, fieldKey, selectedTag, listItemTag);
+    }
   }
 
   let matchSelector = baseSelector;
@@ -545,15 +547,16 @@ function renderRuleTypeTabs() {
 }
 
 function updateStepIndicator() {
+  const stepText = document.getElementById('stepText');
+  if (!stepText) return;
   const fields = getFields();
   const rule = getRuleState();
   if (rule.currentStep === fields.length) {
-    document.getElementById('stepText').textContent = `汇总: ${fields.length} 个字段`;
+    stepText.innerHTML = `汇总: ${fields.length} 个字段`;
     return;
   }
   const field = fields[rule.currentStep];
-  const stepText = `${rule.currentStep + 1}/${fields.length}: ${field.label}${field.required ? ' *' : ''}`;
-  document.getElementById('stepText').textContent = stepText;
+  stepText.innerHTML = `<span class="step-num">${rule.currentStep + 1}/${fields.length}</span> ${field.label}${field.required ? ' <span class="required">*</span>' : ''}`;
 }
 
 function renderFields() {
@@ -681,7 +684,7 @@ function renderFields() {
           placeholder="请输入或选择">${escapeHtml(value)}</textarea>
       </div>
       <div class="field-actions">
-        <button id="selectBtn" class="btn btn-action" ${fieldState === 'picking' ? 'disabled' : ''}>
+        <button id="selectBtn" class="btn btn-primary" ${fieldState === 'picking' ? 'disabled' : ''}>
           ${fieldState === 'picking' ? '选择中...' : '选择元素'}
         </button>
         ${fieldState === 'picking' ? `<button id="cancelBtn" class="btn btn-action btn-cancel">取消选择</button>` : ''}
@@ -734,11 +737,7 @@ function renderSummaryView(container) {
   const rows = fields.map((f, index) => {
     const fieldState = rule.fieldStates[f.key] || 'pending';
     const fieldData = rule.fields[f.key] || {};
-    let stateIcon = {
-      pending: '○',
-      picking: '◐',
-      selected: '●',
-    }[fieldState];
+    const stateDot = `<span class="state-dot state-dot--${fieldState}" title="${fieldState === 'selected' ? '已配置' : fieldState === 'picking' ? '选择中' : '未配置'}"></span>`;
 
     const isLinkField = LINK_FIELDS.includes(f.key);
     const rawValue = fieldData.value || '';
@@ -747,7 +746,7 @@ function renderSummaryView(container) {
     return `
       <div class="summary-row" data-step-index="${index}">
         <div class="summary-field-info">
-          <span class="summary-state-icon">${stateIcon}</span>
+          ${stateDot}
           <span class="summary-field-name" data-step-index="${index}">${f.label}${f.required ? ' <span class="required">*</span>' : ''}</span>
         </div>
         <textarea class="input summary-field-value" rows="1" data-field-key="${f.key}" placeholder="未配置">${escapeHtml(value)}</textarea>
@@ -1228,7 +1227,12 @@ function handleIndexApply() {
   if (!fieldData.listIndex) fieldData.listIndex = {};
 
   const baseSelector = fieldData.rawSelector;
-  const textRule = buildTextIndexedRule(baseSelector, fieldData, isListField);
+  // JS mode: skip text rules when rawSelector is a CSS selector (text-only
+  // rules like "text.xxx" have no selector to select, keep them as-is)
+  const isTextRule = !isListField && parseTextRule(baseSelector) !== null;
+  const textRule = fieldData.useJsIndex && !isTextRule
+    ? ''
+    : buildTextIndexedRule(baseSelector, fieldData, isListField);
   const nextValue = textRule || buildIndexedRule(baseSelector, field.key, fieldData, isListField);
   rule.fields[field.key].value = applyDebugPrefix(nextValue, fieldData.debug);
 
@@ -1493,20 +1497,14 @@ function renderFieldStatusSummary() {
   const rule = getRuleState();
   const summary = fields.map((f, index) => {
     const fieldState = rule.fieldStates[f.key] || 'pending';
-    let stateIcon = {
-      pending: '○',
-      picking: '◐',
-      selected: '●',
-    }[fieldState];
-
     const activeClass = index === rule.currentStep ? ' active' : '';
-    return `<span class="status-item${activeClass}" data-field="${f.key}" data-step-index="${index}">${stateIcon} ${f.label}</span>`;
-  }).join(' | ');
+    return `<span class="status-item status-item--${fieldState}${activeClass}" data-field="${f.key}" data-step-index="${index}">${f.label}</span>`;
+  }).join('');
 
   const summaryActiveClass = rule.currentStep === fields.length ? ' active' : '';
-  const summaryHtml = `<span class="status-item${summaryActiveClass}" data-step-index="${fields.length}">☰ 汇总</span>`;
+  const summaryHtml = `<span class="status-item status-item--summary${summaryActiveClass}" data-step-index="${fields.length}">汇总</span>`;
 
-  summaryContainer.innerHTML = summary + ' | ' + summaryHtml;
+  summaryContainer.innerHTML = summary + summaryHtml;
 
   summaryContainer.querySelectorAll('.status-item').forEach(item => {
     item.addEventListener('click', () => {
@@ -2105,7 +2103,7 @@ function handleImportFileSelect() {
   if (!file) return;
 
   const reader = new FileReader();
-  reader.onload = function () {
+  reader.onload = () => {
     const jsonTextarea = document.getElementById('importJsonTextarea');
     jsonTextarea.value = reader.result;
     autoResizeTextarea(jsonTextarea);
@@ -2335,7 +2333,7 @@ function escapeHtml(text) {
   return div.innerHTML;
 }
 
-window.togglePreviews = function(header) {
+window.togglePreviews = (header) => {
   const list = header.nextElementSibling;
   const toggle = header.querySelector('.preview-toggle');
   if (list.classList.contains('hidden')) {
