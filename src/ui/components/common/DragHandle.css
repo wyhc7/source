@@ -1,0 +1,30 @@
+.drag-handle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 6px;
+  color: var(--color-text-tertiary);
+  cursor: grab;
+  transition: background 0.15s ease, color 0.15s ease;
+}
+
+.drag-handle:hover {
+  background: var(--color-bg-secondary);
+  color: var(--color-text-primary);
+}
+
+.drag-handle:active {
+  cursor: grabbing;
+}
+
+.drag-handle[aria-grabbed="true"] {
+  background: var(--color-bg-secondary);
+  color: var(--color-primary);
+}
+
+.drag-handle:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+}

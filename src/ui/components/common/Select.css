@@ -1,0 +1,66 @@
+.select-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.select__label {
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--color-text-primary);
+}
+
+.select__container {
+  position: relative;
+}
+
+.select__field {
+  width: 100%;
+  padding: 8px 36px 8px 12px;
+  font-size: 13px;
+  color: var(--color-text-primary);
+  background: var(--color-bg-primary);
+  border: 1px solid var(--color-border);
+  border-radius: 6px;
+  appearance: none;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.select__field:focus {
+  outline: none;
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 3px var(--color-primary-alpha);
+}
+
+.select__field:disabled {
+  background: var(--color-bg-secondary);
+  cursor: not-allowed;
+}
+
+.select-wrapper--error .select__field {
+  border-color: var(--color-danger);
+}
+
+.select-wrapper--error .select__field:focus {
+  box-shadow: 0 0 0 3px var(--color-danger-alpha);
+}
+
+.select__arrow {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  pointer-events: none;
+  color: var(--color-text-tertiary);
+  font-size: 10px;
+}
+
+.select__error {
+  font-size: 11px;
+  color: var(--color-danger);
+}
+
+.select__helper {
+  font-size: 11px;
+  color: var(--color-text-tertiary);
+}

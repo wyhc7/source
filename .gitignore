@@ -1,7 +1,13 @@
 *.crx
 *.pem
 web-ext-artifacts/
-AGENTS.md
-.codex
-.*/
-docs/
+
+# Build artifacts
+dist/
+coverage/
+node_modules/
+playwright-report/
+
+# OS files
+.DS_Store
+Thumbs.db

@@ -1,0 +1,236 @@
+{
+  "extName": {
+    "message": "Legado Source Generator",
+    "description": "扩展名称"
+  },
+  "extDescription": {
+    "message": "为 Legado 阅读 APP 生成书源规则的浏览器扩展",
+    "description": "扩展描述"
+  },
+  "pickElement": {
+    "message": "选择元素",
+    "description": "选择元素按钮"
+  },
+  "startCapture": {
+    "message": "开始捕获",
+    "description": "开始捕获搜索"
+  },
+  "stopCapture": {
+    "message": "停止捕获",
+    "description": "停止捕获搜索"
+  },
+  "debugTitle": {
+    "message": "调试面板",
+    "description": "调试面板标题"
+  },
+  "connectDebug": {
+    "message": "开始调试",
+    "description": "连接调试按钮"
+  },
+  "disconnectDebug": {
+    "message": "断开调试",
+    "description": "断开调试按钮"
+  },
+  "clearLogs": {
+    "message": "清空日志",
+    "description": "清空日志按钮"
+  },
+  "copyLogs": {
+    "message": "复制日志",
+    "description": "复制日志按钮"
+  },
+  "pauseLogs": {
+    "message": "暂停日志",
+    "description": "暂停日志复选框"
+  },
+  "importBookSource": {
+    "message": "导入书源",
+    "description": "导入书源按钮"
+  },
+  "exportBookSource": {
+    "message": "导出书源",
+    "description": "导出书源按钮"
+  },
+  "resetAll": {
+    "message": "重置所有",
+    "description": "重置所有按钮"
+  },
+  "addExploreCard": {
+    "message": "新增卡片",
+    "description": "新增探索卡片按钮"
+  },
+  "batchReplace": {
+    "message": "批量替换",
+    "description": "批量替换按钮"
+  },
+  "categoryPaging": {
+    "message": "分类翻页",
+    "description": "分类翻页按钮"
+  },
+  "save": {
+    "message": "保存",
+    "description": "保存按钮"
+  },
+  "cancel": {
+    "message": "取消",
+    "description": "取消按钮"
+  },
+  "delete": {
+    "message": "删除",
+    "description": "删除按钮"
+  },
+  "edit": {
+    "message": "编辑",
+    "description": "编辑按钮"
+  },
+  "previousStep": {
+    "message": "上一步",
+    "description": "上一步按钮"
+  },
+  "nextStep": {
+    "message": "下一步",
+    "description": "下一步按钮"
+  },
+  "finish": {
+    "message": "完成",
+    "description": "完成按钮"
+  },
+  "listSelector": {
+    "message": "列表选择器",
+    "description": "列表选择器标签"
+  },
+  "selectList": {
+    "message": "选择列表",
+    "description": "选择列表按钮"
+  },
+  "useJsIndex": {
+    "message": "使用 JS 索引模式",
+    "description": "JS 索引模式复选框"
+  },
+  "webView": {
+    "message": "webView (详情页)",
+    "description": "webView 复选框"
+  },
+  "indexConfig": {
+    "message": "索引配置",
+    "description": "索引配置标签"
+  },
+  "startIndex": {
+    "message": "起始",
+    "description": "起始索引输入"
+  },
+  "endIndex": {
+    "message": "结束",
+    "description": "结束索引输入"
+  },
+  "singleIndex": {
+    "message": "单值",
+    "description": "单值索引输入"
+  },
+  "previewRule": {
+    "message": "生成规则预览",
+    "description": "规则预览标签"
+  },
+  "matchedCount": {
+    "message": "匹配 $count$ 个元素",
+    "description": "匹配数量提示",
+    "placeholders": {
+      "count": {
+        "content": "$1",
+        "example": "5"
+      }
+    }
+  },
+  "statePending": {
+    "message": "未选择",
+    "description": "字段状态：未选择"
+  },
+  "statePicking": {
+    "message": "拾取中...",
+    "description": "字段状态：拾取中"
+  },
+  "stateSelected": {
+    "message": "已选择",
+    "description": "字段状态：已选择"
+  },
+  "snippetInsert": {
+    "message": "插入片段",
+    "description": "插入片段按钮"
+  },
+  "snippetAdd": {
+    "message": "新建片段",
+    "description": "新建片段按钮"
+  },
+  "snippetLabel": {
+    "message": "标签",
+    "description": "片段标签输入"
+  },
+  "snippetValue": {
+    "message": "值",
+    "description": "片段值输入"
+  },
+  "categoryTree": {
+    "message": "分类树",
+    "description": "分类树标题"
+  },
+  "categoryPath": {
+    "message": "分类路径",
+    "description": "分类路径输入"
+  },
+  "categoryAdd": {
+    "message": "添加分类",
+    "description": "添加分类按钮"
+  },
+  "categoryClear": {
+    "message": "清空分类",
+    "description": "清空分类按钮"
+  },
+  "debugConnected": {
+    "message": "已连接",
+    "description": "调试连接状态：已连接"
+  },
+  "debugDisconnected": {
+    "message": "未连接",
+    "description": "调试连接状态：未连接"
+  },
+  "debugConnecting": {
+    "message": "连接中...",
+    "description": "调试连接状态：连接中"
+  },
+  "debugReconnecting": {
+    "message": "重连中...",
+    "description": "调试连接状态：重连中"
+  },
+  "importSuccess": {
+    "message": "导入成功",
+    "description": "导入成功提示"
+  },
+  "importError": {
+    "message": "导入失败",
+    "description": "导入失败提示"
+  },
+  "exportSuccess": {
+    "message": "导出成功",
+    "description": "导出成功提示"
+  },
+  "copySuccess": {
+    "message": "已复制到剪贴板",
+    "description": "复制成功提示"
+  },
+  "resetSuccess": {
+    "message": "已重置",
+    "description": "重置成功提示"
+  },
+  "errorNetwork": {
+    "message": "网络错误",
+    "description": "网络错误提示"
+  },
+  "errorPermission": {
+    "message": "权限被拒绝",
+    "description": "权限错误提示"
+  },
+  "errorStorage": {
+    "message": "存储空间不足",
+    "description": "存储错误提示"
+  }
+}

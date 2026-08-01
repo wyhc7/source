@@ -1,0 +1,127 @@
+.explore-card {
+  display: flex;
+  gap: 12px;
+  padding: 12px;
+  background: var(--color-bg-primary);
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  transition: box-shadow 0.15s ease, border-color 0.15s ease;
+}
+
+.explore-card:hover {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  border-color: var(--color-primary-alpha);
+}
+
+.explore-card--editing {
+  border-color: var(--color-primary);
+}
+
+.explore-card__drag {
+  flex-shrink: 0;
+  padding-top: 4px;
+}
+
+.explore-card__content {
+  flex: 1;
+  min-width: 0;
+}
+
+.explore-card__main {
+  margin-bottom: 8px;
+}
+
+.explore-card__url {
+  font-size: 12px;
+  font-family: monospace;
+  color: var(--color-text-secondary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin-bottom: 4px;
+}
+
+.explore-card__meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  font-size: 11px;
+}
+
+.explore-card__name {
+  font-weight: 500;
+  color: var(--color-text-primary);
+}
+
+.explore-card__category {
+  color: var(--color-text-tertiary);
+}
+
+.explore-card__template {
+  color: var(--color-primary);
+  font-family: monospace;
+}
+
+.explore-card__actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.explore-card__toggle {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 12px;
+  color: var(--color-text-secondary);
+  cursor: pointer;
+}
+
+.explore-card__btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border: none;
+  background: transparent;
+  border-radius: 6px;
+  color: var(--color-text-tertiary);
+  cursor: pointer;
+  transition: background 0.15s ease, color 0.15s ease;
+}
+
+.explore-card__btn:hover {
+  background: var(--color-bg-secondary);
+  color: var(--color-text-primary);
+}
+
+.explore-card__btn--danger:hover {
+  background: var(--color-danger-alpha);
+  color: var(--color-danger);
+}
+
+.explore-card__edit-form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px solid var(--color-border);
+}
+
+.explore-card__edit-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  margin-top: 4px;
+}
+
+.modal__footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  padding-top: 12px;
+  margin-top: 4px;
+  border-top: 1px solid var(--color-border);
+}

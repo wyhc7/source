@@ -1,0 +1,89 @@
+.debug-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  height: 100%;
+}
+
+.debug-panel__connection {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 12px;
+  background: var(--color-bg-secondary);
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+}
+
+.debug-panel__title {
+  margin: 0;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--color-text-primary);
+}
+
+.debug-panel__ip-inputs {
+  display: flex;
+  gap: 4px;
+}
+
+.debug-panel__ip-inputs .input-wrapper {
+  flex: 1;
+}
+
+.debug-panel__buttons {
+  display: flex;
+  gap: 8px;
+}
+
+.debug-panel__status {
+  font-size: 12px;
+  color: var(--color-text-secondary);
+}
+
+.debug-panel__status--connected {
+  color: var(--color-success);
+  font-weight: 500;
+}
+
+.debug-panel__status--disconnected {
+  color: var(--color-text-tertiary);
+}
+
+.debug-panel__log-toolbar {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.debug-panel__pause-toggle {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  color: var(--color-text-secondary);
+  cursor: pointer;
+}
+
+.debug-panel__log-container {
+  flex: 1;
+  overflow-y: auto;
+  padding: 10px;
+  background: var(--color-bg-primary);
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  font-family: monospace;
+  font-size: 11px;
+  line-height: 1.5;
+  color: var(--color-text-primary);
+}
+
+.debug-panel__log-line {
+  padding: 2px 0;
+  border-bottom: 1px solid var(--color-border-alpha);
+  word-break: break-all;
+}
+
+.debug-panel__log-line:last-child {
+  border-bottom: none;
+}
