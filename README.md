@@ -35,12 +35,21 @@
 
 ## 安装
 
-### Chrome / Edge
+### Chrome
 
 1. 打开浏览器，访问 `chrome://extensions/`
 2. 开启右上角的"开发者模式"
-3. 点击"加载已解压的扩展程序"，选择 `src` 目录
+3. 点击"加载已解压的扩展程序"，选择 `dist/chrome` 目录
 4. 建议固定扩展图标方便使用
+
+### Edge
+
+1. 打开浏览器，访问 `edge://extensions/`
+2. 开启右上角的"开发者模式"
+3. 点击"加载已解压的扩展程序"，选择 `dist/chrome` 目录
+4. 建议固定扩展图标方便使用
+
+> Edge 基于 Chromium 内核，直接兼容 Chrome (MV3) 扩展。
 
 ### Firefox
 

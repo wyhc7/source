@@ -5,6 +5,7 @@ import { FieldEditor } from '@ui/components/FieldEditor';
 import { ExploreCardGrid } from '@ui/components/ExploreCardGrid';
 import { CategoryTree } from '@ui/components/CategoryTree';
 import { importBookSource } from '@core/import-export';
+import { checkForUpdate } from '@core/check-update';
 import { getI18nAPI } from '@platform/browser-api';
 import type { RuleType } from '@lib';
 import './Popup.css';
@@ -43,6 +44,8 @@ export function Popup() {
   const [exportJson, setExportJson] = useState('');
   const [showCategoryTree, setShowCategoryTree] = useState(false);
   const [categoryInput, setCategoryInput] = useState('');
+  const [checkUpdateState, setCheckUpdateState] = useState<'idle' | 'checking' | 'ok' | 'update' | 'error'>('idle');
+  const [updateVersion, setUpdateVersion] = useState('');
 
   const ruleState = rules[activeRuleType];
   const fieldKeys = activeRuleType === 'bookInfo' ? BOOK_INFO_FIELDS :
@@ -119,6 +122,20 @@ export function Popup() {
     setShowCategoryTree(false);
   };
 
+  const handleCheckUpdate = async () => {
+    setCheckUpdateState('checking');
+    const currentVer = (typeof chrome !== 'undefined' && chrome.runtime?.getManifest()?.version) || '1.0.0';
+    const result = await checkForUpdate(currentVer);
+    if (result.hasUpdate) {
+      setCheckUpdateState('update');
+      setUpdateVersion(result.latestVersion);
+    } else if (result.error) {
+      setCheckUpdateState('error');
+    } else {
+      setCheckUpdateState('ok');
+    }
+  };
+
   if (activeRuleType === 'explore') {
     return <ExploreCardGrid />;
   }
@@ -159,6 +176,9 @@ export function Popup() {
           )}
         </div>
         <div className="popup__toolbar-right">
+          <Button variant="secondary" size="sm" onClick={handleCheckUpdate} disabled={checkUpdateState === 'checking'}>
+            {checkUpdateState === 'checking' ? i18n.getMessage('checkingUpdate') : i18n.getMessage('checkUpdate')}
+          </Button>
           <Button variant="secondary" size="sm" onClick={() => setShowImportModal(true)}>导入</Button>
           <Button variant="secondary" size="sm" onClick={handleExport}>导出</Button>
           <Button variant="secondary" size="sm" onClick={handleCategoryTree}>分类</Button>
@@ -235,6 +255,19 @@ export function Popup() {
         <Modal isOpen={true} onClose={() => setShowCategoryTree(false)} title="分类树编辑" size="md">
           <CategoryTree category={categoryInput} onSave={handleCategorySave} onCancel={() => setShowCategoryTree(false)} />
         </Modal>
+      )}
+
+      {checkUpdateState !== 'idle' && checkUpdateState !== 'checking' && checkUpdateState !== 'error' && (
+        <div className="popup__update-banner popup__update-banner--ok">
+          {checkUpdateState === 'update'
+            ? `${i18n.getMessage('newVersionAvailable', [updateVersion])}`
+            : i18n.getMessage('noUpdate')}
+        </div>
+      )}
+      {checkUpdateState === 'error' && (
+        <div className="popup__update-banner popup__update-banner--error">
+          {i18n.getMessage('checkFailed')}
+        </div>
       )}
     </div>
   );
