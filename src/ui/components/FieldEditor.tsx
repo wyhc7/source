@@ -4,6 +4,7 @@ import { Input, Button } from '@ui/components/common';
 import { countMatches } from '@core/selector-generator';
 import { buildNativeIndexRule, buildJsIndexRule, buildTextIndexedRule } from '@core/indexed-rule';
 import { getPresetSnippets, loadCustomSnippets } from '@core/quick-snippet';
+import { getFieldLabel } from '@ui/field-labels';
 import type { RuleType, IndexConfig } from '@lib';
 import './FieldEditor.css';
 
@@ -19,7 +20,12 @@ const FIELD_KEYS = [
   { key: 'kind', label: '分类', isLink: false },
   { key: 'lastChapter', label: '最新章节', isLink: false },
   { key: 'updateTime', label: '更新时间', isLink: false },
-  { key: 'wordCount', label: '字数', isLink: false }
+  { key: 'wordCount', label: '字数', isLink: false },
+  { key: 'searchUrl', label: '搜索链接', isLink: true },
+  { key: 'method', label: '请求方式', isLink: false },
+  { key: 'postBody', label: 'POST 请求体', isLink: false },
+  { key: 'charset', label: '字符编码', isLink: false },
+  { key: 'header', label: '请求头', isLink: false }
 ];
 
 interface FieldEditorProps {
@@ -128,7 +134,7 @@ export function FieldEditor({ ruleType, fieldKey, onClose }: FieldEditorProps) {
   return (
     <div className="field-editor">
       <div className="field-editor__header">
-        <span className="field-editor__label">{FIELD_KEYS.find(f => f.key === fieldKey)?.label || fieldKey}</span>
+        <span className="field-editor__label">{getFieldLabel(fieldKey)}</span>
         <span className={`field-editor__state field-editor__state--${fieldState}`}>
           {fieldState === 'picking' ? '拾取中...' : fieldState === 'selected' ? '已选择' : '未选择'}
         </span>

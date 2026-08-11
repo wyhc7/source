@@ -8,6 +8,7 @@ import { importBookSource } from '@core/import-export';
 import { checkForUpdate } from '@core/check-update';
 import { AiPanel } from '@ui/components/AiPanel';
 import { AiSettings } from '@ui/components/AiSettings';
+import { getFieldLabel } from '@ui/field-labels';
 import { getI18nAPI } from '@platform/browser-api';
 import type { RuleType } from '@lib';
 import './Popup.css';
@@ -198,7 +199,7 @@ export function Popup() {
         {fieldKeys.map((key, index) => (
           <div key={key} className={`popup__step ${index === currentStep ? 'popup__step--active' : ''} ${ruleState.fieldStates[key] === 'selected' ? 'popup__step--done' : ''}`}>
             <span className="popup__step-number">{index + 1}</span>
-            <span className="popup__step-label">{key}</span>
+            <span className="popup__step-label">{getFieldLabel(key)}</span>
             {ruleState.fieldStates[key] === 'selected' && <span className="popup__step-check">✓</span>}
           </div>
         ))}

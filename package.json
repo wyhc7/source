@@ -1,6 +1,6 @@
 {
   "name": "legado-source-generator",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "Legado Source Generator - 书源规则生成浏览器扩展",
   "private": true,
   "scripts": {
