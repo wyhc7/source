@@ -14,7 +14,7 @@ export interface UpdateResult {
   error?: string;
 }
 
-const GITHUB_REPO = 'z1131392774/legado-source-generator';
+const GITHUB_REPO = 'wyhc7/source';
 const RELEASES_API = `https://api.github.com/repos/${GITHUB_REPO}/releases/latest`;
 
 function compareVersions(a: string, b: string): number {

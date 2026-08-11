@@ -47,6 +47,7 @@ export function Popup() {
   const [categoryInput, setCategoryInput] = useState('');
   const [checkUpdateState, setCheckUpdateState] = useState<'idle' | 'checking' | 'ok' | 'update' | 'error'>('idle');
   const [updateVersion, setUpdateVersion] = useState('');
+  const [updateReleaseUrl, setUpdateReleaseUrl] = useState('');
   const [showAiPanel, setShowAiPanel] = useState(false);
 
   const ruleState = rules[activeRuleType];
@@ -129,6 +130,7 @@ export function Popup() {
     if (result.hasUpdate) {
       setCheckUpdateState('update');
       setUpdateVersion(result.latestVersion);
+      setUpdateReleaseUrl(result.releaseUrl);
     } else if (result.error) {
       setCheckUpdateState('error');
     } else {
@@ -267,7 +269,16 @@ export function Popup() {
       {checkUpdateState !== 'idle' && checkUpdateState !== 'checking' && checkUpdateState !== 'error' && (
         <div className="popup__update-banner popup__update-banner--ok">
           {checkUpdateState === 'update'
-            ? `${i18n.getMessage('newVersionAvailable', [updateVersion])}`
+            ? (
+              <a
+                className="popup__update-link"
+                href={updateReleaseUrl || 'https://github.com/wyhc7/source/releases'}
+                target="_blank"
+                rel="noreferrer"
+              >
+                {i18n.getMessage('newVersionAvailable', [updateVersion])}
+              </a>
+            )
             : i18n.getMessage('noUpdate')}
         </div>
       )}

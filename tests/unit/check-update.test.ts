@@ -18,7 +18,7 @@ describe('checkForUpdate', () => {
   it('should detect newer version', async () => {
     mockFetch.mockResolvedValue({
       ok: true,
-      json: () => Promise.resolve({ tag_name: 'v1.1.0', html_url: 'https://github.com/z1131392774/legado-source-generator/releases/tag/v1.1.0' })
+      json: () => Promise.resolve({ tag_name: 'v1.1.0', html_url: 'https://github.com/wyhc7/source/releases/tag/v1.1.0' })
     });
     const result = await checkForUpdate('1.0.0');
     expect(result.hasUpdate).toBe(true);
@@ -29,7 +29,7 @@ describe('checkForUpdate', () => {
   it('should detect no update when versions equal', async () => {
     mockFetch.mockResolvedValue({
       ok: true,
-      json: () => Promise.resolve({ tag_name: 'v1.0.0', html_url: 'https://github.com/z1131392774/legado-source-generator/releases/tag/v1.0.0' })
+      json: () => Promise.resolve({ tag_name: 'v1.0.0', html_url: 'https://github.com/wyhc7/source/releases/tag/v1.0.0' })
     });
     const result = await checkForUpdate('1.0.0');
     expect(result.hasUpdate).toBe(false);

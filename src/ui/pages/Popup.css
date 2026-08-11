@@ -247,6 +247,16 @@
   border-bottom: 1px solid var(--color-success-border);
 }
 
+.popup__update-link {
+  color: inherit;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.popup__update-link:hover {
+  opacity: 0.8;
+}
+
 .popup__update-banner--error {
   background: var(--color-error-bg);
   color: var(--color-error);
