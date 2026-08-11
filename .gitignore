@@ -11,3 +11,4 @@ playwright-report/
 # OS files
 .DS_Store
 Thumbs.db
+legado-source-generator-*.zip
