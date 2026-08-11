@@ -45,6 +45,7 @@ function manifestGeneratorPlugin() {
           {
             matches: ['<all_urls>'],
             js: ['content.js'],
+            type: 'module',
             run_at: 'document_idle',
             all_frames: false
           }
@@ -98,6 +99,7 @@ function manifestGeneratorPlugin() {
           {
             matches: ['<all_urls>'],
             js: ['content.js'],
+            type: 'module',
             run_at: 'document_idle',
             all_frames: false
           }
