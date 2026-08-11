@@ -60,21 +60,32 @@ test.describe('Side Panel', () => {
     await expect(title).toBeVisible();
   });
 
-  test('renders rule type tabs', async ({ page }) => {
-    const tabs = page.locator('.sidepanel__tab');
-    await expect(tabs).toHaveCount(6);
+  test('renders mode buttons', async ({ page }) => {
+    const buttons = page.locator('.sidepanel__mode-btn');
+    await expect(buttons).toHaveCount(3);
+    await expect(buttons.nth(0)).toContainText('AI 生成');
+    await expect(buttons.nth(1)).toContainText('AI 设置');
+    await expect(buttons.nth(2)).toContainText('规则');
   });
 
-  test('active tab is highlighted', async ({ page }) => {
-    const activeTab = page.locator('.sidepanel__tab--active');
-    await expect(activeTab).toHaveCount(1);
+  test('active mode button is highlighted', async ({ page }) => {
+    const activeBtn = page.locator('.sidepanel__mode-btn--active');
+    await expect(activeBtn).toHaveCount(1);
   });
 
-  test('switching to debug tab shows debug panel', async ({ page }) => {
-    const tabs = page.locator('.sidepanel__tab');
-    await tabs.filter({ hasText: '调试' }).click();
+  test('switching to rules mode shows popup tabs', async ({ page }) => {
+    const rulesBtn = page.locator('.sidepanel__mode-btn').filter({ hasText: '规则' });
+    await rulesBtn.click();
     await page.waitForTimeout(500);
-    const debugBtn = page.locator('button', { hasText: '开始调试' });
-    await expect(debugBtn).toBeVisible();
+    const tabs = page.locator('.popup__tab');
+    await expect(tabs).toHaveCount(5);
+  });
+
+  test('switching to ai-generate mode shows ai panel', async ({ page }) => {
+    const aiBtn = page.locator('.sidepanel__mode-btn').filter({ hasText: 'AI 生成' });
+    await aiBtn.click();
+    await page.waitForTimeout(500);
+    const urlInput = page.locator('input[placeholder*="URL"], input[type="url"], input').first();
+    await expect(urlInput).toBeVisible();
   });
 });
