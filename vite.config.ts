@@ -2,6 +2,7 @@ import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 import { resolve } from 'path';
 import { readFileSync, writeFileSync, existsSync, mkdirSync, cpSync, copyFileSync } from 'fs';
+import { basename } from 'path';
 import { fileURLToPath } from 'url';
 
 const __dirname = fileURLToPath(new URL('.', import.meta.url));
@@ -31,8 +32,7 @@ function manifestGeneratorPlugin() {
         permissions: ['storage', 'scripting', 'activeTab', 'sidePanel'],
         host_permissions: ['http://*/*', 'https://*/*'],
         background: {
-          service_worker: 'background.js',
-          type: 'module'
+          service_worker: 'background.js'
         },
         side_panel: {
           default_path: 'sidepanel.html'
@@ -45,7 +45,6 @@ function manifestGeneratorPlugin() {
           {
             matches: ['<all_urls>'],
             js: ['content.js'],
-            type: 'module',
             run_at: 'document_idle',
             all_frames: false
           }
@@ -99,7 +98,6 @@ function manifestGeneratorPlugin() {
           {
             matches: ['<all_urls>'],
             js: ['content.js'],
-            type: 'module',
             run_at: 'document_idle',
             all_frames: false
           }
@@ -136,8 +134,28 @@ function copyHtmlPlugin() {
     closeBundle() {
       const target = (process.env as NodeJS.ProcessEnv)['BUILD_TARGET'] || 'chrome';
       const outDir = resolve(__dirname, `dist/${target}`);
-      copyFileSync(resolve(__dirname, 'src/popup.html'), resolve(outDir, 'popup.html'));
-      copyFileSync(resolve(__dirname, 'src/sidepanel.html'), resolve(outDir, 'sidepanel.html'));
+
+      const htmlEntries: Record<string, string> = {
+        'src/popup.html': 'popup.js',
+        'src/sidepanel.html': 'sidepanel.js'
+      };
+
+      for (const [src, entry] of Object.entries(htmlEntries)) {
+        const srcPath = resolve(__dirname, src);
+        const destPath = resolve(outDir, basename(srcPath));
+        if (!existsSync(srcPath)) continue;
+
+        let html = readFileSync(srcPath, 'utf-8');
+        html = html.replace(
+          /<script[^>]*src="[^"]*"[^>]*><\/script>/,
+          `<script type="module" src="./${entry}"></script>`
+        );
+        html = html.replace(
+          /<\/head>/,
+          '<link rel="stylesheet" href="./styles.css">\n</head>'
+        );
+        writeFileSync(destPath, html);
+      }
 
       // Copy icon SVGs
       const iconsSrc = resolve(__dirname, 'src/icons');

@@ -5,8 +5,8 @@
   "private": true,
   "scripts": {
     "dev": "vite",
-    "build:chrome": "cross-env BUILD_TARGET=chrome vite build",
-    "build:firefox": "cross-env BUILD_TARGET=firefox vite build",
+    "build:chrome": "cross-env BUILD_TARGET=chrome vite build && cross-env BUILD_TARGET=chrome node scripts/build-scripts.mjs",
+    "build:firefox": "cross-env BUILD_TARGET=firefox vite build && cross-env BUILD_TARGET=firefox node scripts/build-scripts.mjs",
     "lint": "eslint src --max-warnings 0",
     "typecheck": "tsc --noEmit",
     "test:unit": "vitest run --coverage",
@@ -33,6 +33,7 @@
     "@vitejs/plugin-react": "^4.2.1",
     "@vitest/coverage-v8": "^1.2.1",
     "cross-env": "^7.0.3",
+    "esbuild": "^0.28.2",
     "eslint": "^8.56.0",
     "eslint-plugin-react-hooks": "^4.6.0",
     "husky": "^9.0.10",

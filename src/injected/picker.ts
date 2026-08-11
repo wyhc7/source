@@ -1,4 +1,5 @@
 import { generateSelector, countMatches } from '../core/selector-generator';
+import { SearchCapture } from './search-capture-content';
 
 interface PickerCallbacks {
   onPick: (selector: string) => void;
@@ -56,7 +57,6 @@ async function handleMessage(message: InjectedMessage): Promise<void> {
     }
 
     case 'startCapture': {
-      const { SearchCapture } = await import('./search-capture-content');
       currentCapture = new SearchCapture();
       currentCapture.startCapture().then((rule: any) => {
         sendResponse(id, { rule });
