@@ -3,47 +3,57 @@ import { useStore } from '@store';
 import { Popup } from '@ui/pages/Popup';
 import { ExploreCardGrid } from '@ui/components/ExploreCardGrid';
 import { DebugPanel } from '@ui/components/DebugPanel';
+import { AiPanel } from '@ui/components/AiPanel';
+import { AiSettings } from '@ui/components/AiSettings';
 import { getI18nAPI } from '@platform/browser-api';
 import './SidePanel.css';
 
+export type SidePanelMode = 'rules' | 'ai-generate' | 'ai-settings';
+
 export function SidePanel() {
   const { activeRuleType, setActiveRuleType } = useStore();
+  const [mode, setMode] = React.useState<SidePanelMode>('rules');
   const i18n = getI18nAPI();
 
-  const RULE_TABS = [
-    { key: 'search', label: '搜索规则' },
-    { key: 'bookInfo', label: '书籍信息' },
-    { key: 'toc', label: '目录规则' },
-    { key: 'content', label: '内容规则' },
-    { key: 'explore', label: '探索 URL' },
-    { key: 'debug', label: '调试' }
-  ];
-
-  const handleTabChange = (type: string) => {
-    setActiveRuleType(type as any);
+  const handleAiMode = (m: SidePanelMode) => {
+    setMode(m);
+    if (m === 'rules') {
+      setActiveRuleType('search');
+    }
   };
 
   return (
     <div className="sidepanel">
       <div className="sidepanel__header">
         <h1 className="sidepanel__title">{i18n.getMessage('extName') || 'Legado Source Generator'}</h1>
-        <div className="sidepanel__tabs">
-          {RULE_TABS.map(tab => (
-            <button
-              key={tab.key}
-              className={`sidepanel__tab ${activeRuleType === tab.key ? 'sidepanel__tab--active' : ''}`}
-              onClick={() => handleTabChange(tab.key)}
-            >
-              {tab.label}
-            </button>
-          ))}
+        <div className="sidepanel__mode-bar">
+          <button
+            className={`sidepanel__mode-btn ${mode === 'ai-generate' ? 'sidepanel__mode-btn--active' : ''}`}
+            onClick={() => handleAiMode('ai-generate')}
+          >
+            AI 生成
+          </button>
+          <button
+            className={`sidepanel__mode-btn ${mode === 'ai-settings' ? 'sidepanel__mode-btn--active' : ''}`}
+            onClick={() => handleAiMode('ai-settings')}
+          >
+            AI 设置
+          </button>
+          <button
+            className={`sidepanel__mode-btn ${mode === 'rules' ? 'sidepanel__mode-btn--active' : ''}`}
+            onClick={() => handleAiMode('rules')}
+          >
+            规则
+          </button>
         </div>
       </div>
 
       <div className="sidepanel__content">
-        {activeRuleType === 'explore' && <ExploreCardGrid />}
-        {activeRuleType === 'debug' && <DebugPanel />}
-        {activeRuleType !== 'explore' && activeRuleType !== 'debug' && <Popup />}
+        {mode === 'ai-generate' && <AiPanel />}
+        {mode === 'ai-settings' && <AiSettings />}
+        {mode === 'rules' && activeRuleType === 'explore' && <ExploreCardGrid />}
+        {mode === 'rules' && activeRuleType === 'debug' && <DebugPanel />}
+        {mode === 'rules' && activeRuleType !== 'explore' && activeRuleType !== 'debug' && <Popup />}
       </div>
     </div>
   );

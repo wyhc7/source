@@ -75,6 +75,9 @@ export interface DebugState {
 export interface SettingsState {
   theme: 'light' | 'dark';
   language: string;
+  aiApiKey: string;
+  aiBaseUrl: string;
+  aiModel: string;
 }
 
 export interface AppState {

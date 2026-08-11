@@ -6,6 +6,7 @@ import { ExploreCardGrid } from '@ui/components/ExploreCardGrid';
 import { CategoryTree } from '@ui/components/CategoryTree';
 import { importBookSource } from '@core/import-export';
 import { checkForUpdate } from '@core/check-update';
+import { AiPanel } from '@ui/components/AiPanel';
 import { getI18nAPI } from '@platform/browser-api';
 import type { RuleType } from '@lib';
 import './Popup.css';
@@ -46,6 +47,7 @@ export function Popup() {
   const [categoryInput, setCategoryInput] = useState('');
   const [checkUpdateState, setCheckUpdateState] = useState<'idle' | 'checking' | 'ok' | 'update' | 'error'>('idle');
   const [updateVersion, setUpdateVersion] = useState('');
+  const [showAiPanel, setShowAiPanel] = useState(false);
 
   const ruleState = rules[activeRuleType];
   const fieldKeys = activeRuleType === 'bookInfo' ? BOOK_INFO_FIELDS :
@@ -93,8 +95,6 @@ export function Popup() {
   const handleImport = () => {
     try {
       importBookSource(importJson);
-      // Convert imported source to rule state
-      // This is simplified - real implementation would map all fields
       showToast('导入成功', 'success');
       setShowImportModal(false);
       setImportJson('');
@@ -176,8 +176,9 @@ export function Popup() {
           )}
         </div>
         <div className="popup__toolbar-right">
+          <Button variant="secondary" size="sm" onClick={() => setShowAiPanel(true)}>AI 生成</Button>
           <Button variant="secondary" size="sm" onClick={handleCheckUpdate} disabled={checkUpdateState === 'checking'}>
-            {checkUpdateState === 'checking' ? i18n.getMessage('checkingUpdate') : i18n.getMessage('checkUpdate')}
+            {checkUpdateState === 'checking' ? '检查中...' : i18n.getMessage('checkUpdate')}
           </Button>
           <Button variant="secondary" size="sm" onClick={() => setShowImportModal(true)}>导入</Button>
           <Button variant="secondary" size="sm" onClick={handleExport}>导出</Button>
@@ -254,6 +255,12 @@ export function Popup() {
       {showCategoryTree && (
         <Modal isOpen={true} onClose={() => setShowCategoryTree(false)} title="分类树编辑" size="md">
           <CategoryTree category={categoryInput} onSave={handleCategorySave} onCancel={() => setShowCategoryTree(false)} />
+        </Modal>
+      )}
+
+      {showAiPanel && (
+        <Modal isOpen={true} onClose={() => setShowAiPanel(false)} title="AI 书源生成" size="lg">
+          <AiPanel />
         </Modal>
       )}
 

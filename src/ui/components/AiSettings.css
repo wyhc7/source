@@ -1,0 +1,48 @@
+.ai-settings {
+  padding: 16px;
+}
+
+.ai-settings__title {
+  font-size: 14px;
+  font-weight: 600;
+  margin: 0 0 12px;
+  color: var(--text-primary);
+}
+
+.ai-settings__field {
+  margin-bottom: 12px;
+}
+
+.ai-settings__label {
+  display: block;
+  font-size: 12px;
+  color: var(--text-secondary);
+  margin-bottom: 4px;
+}
+
+.ai-settings__key-row {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.ai-settings__input {
+  flex: 1;
+}
+
+.ai-settings__toggle {
+  flex-shrink: 0;
+  width: 56px;
+}
+
+.ai-settings__save {
+  width: 100%;
+  margin-top: 4px;
+}
+
+.ai-settings__hint {
+  font-size: 11px;
+  color: var(--text-muted);
+  margin: 8px 0 0;
+  line-height: 1.4;
+}

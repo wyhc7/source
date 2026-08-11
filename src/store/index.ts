@@ -19,7 +19,10 @@ const DEFAULT_DEBUG_STATE: DebugState = {
 
 const DEFAULT_SETTINGS: SettingsState = {
   theme: 'light',
-  language: 'zh_CN'
+  language: 'zh_CN',
+  aiApiKey: '',
+  aiBaseUrl: 'https://api.deepseek.com/v1',
+  aiModel: 'deepseek-chat'
 };
 
 function createChromeStorage() {

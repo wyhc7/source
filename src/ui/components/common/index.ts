@@ -7,3 +7,5 @@ export { useToast, ToastContainer } from './Toast';
 export { DragHandle } from './DragHandle';
 export { Collapse } from './Collapse';
 export { TreeNode } from './TreeNode';
+export { AiPanel } from '../AiPanel';
+export { AiSettings } from '../AiSettings';
