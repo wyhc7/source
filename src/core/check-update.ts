@@ -37,6 +37,15 @@ export async function checkForUpdate(currentVersion: string): Promise<UpdateResu
       headers: { Accept: 'application/vnd.github.v3+json' }
     });
     if (!resp.ok) {
+      if (resp.status === 404) {
+        return {
+          hasUpdate: false,
+          currentVersion,
+          latestVersion: currentVersion,
+          releaseUrl: '',
+          error: 'NOT_FOUND'
+        };
+      }
       return {
         hasUpdate: false,
         currentVersion,

@@ -39,7 +39,7 @@ describe('checkForUpdate', () => {
     mockFetch.mockResolvedValue({ ok: false, status: 404 } as Response);
     const result = await checkForUpdate('1.0.0');
     expect(result.hasUpdate).toBe(false);
-    expect(result.error).toContain('404');
+    expect(result.error).toContain('NOT_FOUND');
   });
 
   it('should return error on fetch exception', async () => {

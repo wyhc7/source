@@ -7,6 +7,7 @@ import { CategoryTree } from '@ui/components/CategoryTree';
 import { importBookSource } from '@core/import-export';
 import { checkForUpdate } from '@core/check-update';
 import { AiPanel } from '@ui/components/AiPanel';
+import { AiSettings } from '@ui/components/AiSettings';
 import { getI18nAPI } from '@platform/browser-api';
 import type { RuleType } from '@lib';
 import './Popup.css';
@@ -48,7 +49,9 @@ export function Popup() {
   const [checkUpdateState, setCheckUpdateState] = useState<'idle' | 'checking' | 'ok' | 'update' | 'error'>('idle');
   const [updateVersion, setUpdateVersion] = useState('');
   const [updateReleaseUrl, setUpdateReleaseUrl] = useState('');
+  const [updateError, setUpdateError] = useState('');
   const [showAiPanel, setShowAiPanel] = useState(false);
+  const [showAiSettings, setShowAiSettings] = useState(false);
 
   const ruleState = rules[activeRuleType];
   const fieldKeys = activeRuleType === 'bookInfo' ? BOOK_INFO_FIELDS :
@@ -133,6 +136,7 @@ export function Popup() {
       setUpdateReleaseUrl(result.releaseUrl);
     } else if (result.error) {
       setCheckUpdateState('error');
+      setUpdateError(result.error);
     } else {
       setCheckUpdateState('ok');
     }
@@ -179,6 +183,7 @@ export function Popup() {
         </div>
         <div className="popup__toolbar-right">
           <Button variant="secondary" size="sm" onClick={() => setShowAiPanel(true)}>AI 生成</Button>
+          <Button variant="secondary" size="sm" onClick={() => setShowAiSettings(true)}>设置</Button>
           <Button variant="secondary" size="sm" onClick={handleCheckUpdate} disabled={checkUpdateState === 'checking'}>
             {checkUpdateState === 'checking' ? '检查中...' : i18n.getMessage('checkUpdate')}
           </Button>
@@ -266,6 +271,12 @@ export function Popup() {
         </Modal>
       )}
 
+      {showAiSettings && (
+        <Modal isOpen={true} onClose={() => setShowAiSettings(false)} title="设置" size="md">
+          <AiSettings />
+        </Modal>
+      )}
+
       {checkUpdateState !== 'idle' && checkUpdateState !== 'checking' && checkUpdateState !== 'error' && (
         <div className="popup__update-banner popup__update-banner--ok">
           {checkUpdateState === 'update'
@@ -284,7 +295,7 @@ export function Popup() {
       )}
       {checkUpdateState === 'error' && (
         <div className="popup__update-banner popup__update-banner--error">
-          {i18n.getMessage('checkFailed')}
+          {updateError === 'NOT_FOUND' ? '当前仓库暂无发布版本' : i18n.getMessage('checkFailed')}
         </div>
       )}
     </div>
