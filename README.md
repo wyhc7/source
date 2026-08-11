@@ -1,304 +1,142 @@
 # Legado 书源生成器
 
-> ⚠️ **风险提示**：本项目完全由 AI 辅助生成（vibe coding），代码可能存在缺陷、安全漏洞或有害内容。作者不对使用本项目产生的任何后果负责。使用者在安装或使用前，请务必自行审查代码，确保安全。
-
-一个 Chrome 扩展，通过可视化点选页面元素来生成[阅读](https://github.com/gedoor/legado) APP 的书源规则。
+> 为 [阅读](https://github.com/gedoor/legado) APP 生成书源规则的浏览器扩展
 
 ## 交流群
 
 1101980180
 
-## 想用ai自动化编写调试书源？
-
-试试[legado-book-source-skill](https://github.com/z1131392774/legado-book-source-skill)
-
 ## 演示视频
 
 [![6分44秒生成完整书源并调试成功](https://socialify.git.ci/z1131392774/legado-source-generator/image?description=1&font=Inter&language=1&name=1&owner=1&theme=Auto)](https://www.bilibili.com/video/BV1ipDdBkEjA/)
 
-> 👆 点击观看完整演示视频
+> 点击观看完整演示视频
+
+---
 
 ## 功能特性
 
-- **可视化元素选择**：点击选择页面上任意元素
-- **智能选择器生成**：自动生成稳定的 CSS 选择器
-- **分步工作流**：支持发现页、搜索页、详情页、目录页、正文页五种规则类型
-- **列表交集算法**：选择两个同列表元素，自动提取公共 class 生成可复用选择器
-- **错误检测**：自动检测 Shadow DOM、iframe、动态 class 等潜在问题
-- **键盘导航**：支持 ↑↓←→ 键在 DOM 树中精确导航
-- **导出 JSON**：一键生成可直接导入阅读 APP 的书源规则
-- **自动填充**：一键从当前页面自动填充书源名称和 URL
-- **检查更新**：自动对比 GitHub 最新版本
-- **状态持久化**：所有填写内容自动保存，关闭浏览器后不丢失
-- **发现页 URL 编辑**：支持可视化卡片编辑、页面收集、批量 URL 替换、样式模板管理
-- **搜索 URL 编辑**：支持自动捕获搜索请求 URL，自动生成带占位符的搜索 URL
+### AI 书源生成（推荐）
+
+输入小说网站 URL，AI 自动分析页面结构，一键生成完整书源规则。
+
+1. 点击扩展图标打开侧边栏
+2. 切换到 **AI 生成** 标签页
+3. 在 **AI 设置** 中配置 LLM API Key（支持 DeepSeek、OpenAI 及任意兼容 OpenAI 格式的端点）
+4. 输入小说网站 URL，点击 **AI 生成书源**
+5. 查看生成的书源字段，可手动编辑后点击 **应用到规则页** 或 **复制 JSON**
+
+### 可视化元素选择
+
+通过点选页面元素自动生成 CSS 选择器，支持 keyboard 精确导航。
+
+- **列表字段**：选择两个同列表元素，自动取交集生成稳定选择器
+- **普通字段**：直接点击目标元素
+- 键盘快捷键：`↑` 父元素、`↓` 子元素、`←` 前兄弟、`→` 后兄弟、`Enter` 确认、`Esc` 取消
+
+### 搜索 URL 自动捕获
+
+自动拦截页面搜索请求，生成带占位符的搜索 URL。
+
+- 支持 GET / POST 两种请求方式
+- 自动检测字符编码（UTF-8 / GBK / BIG5）
+- 支持 `{{page}}` 分页占位符
+
+### 发现页 URL 编辑
+
+可视化卡片管理发现页导航，支持：
+
+- 拖拽排序、拖拽调整宽度
+- 批量 URL 替换（模板匹配 / 正则匹配）
+- Flexbox 布局属性批量编辑
+- 样式模板管理
+
+### 其他功能
+
+- **状态持久化**：所有填写内容自动保存
+- **自动检查更新**：对比 GitHub 最新版本
+- **快速插入片段**：自定义文本片段，一键插入任意输入框
+- **调试面板**：连接阅读 APP 实时调试书源
+
+---
 
 ## 安装
 
-### Chrome
+### Chrome / Edge
 
-1. 打开浏览器，访问 `chrome://extensions/`
-2. 开启右上角的"开发者模式"
-3. 点击"加载已解压的扩展程序"，选择 `dist/chrome` 目录
-4. 建议固定扩展图标方便使用
-
-### Edge
-
-1. 打开浏览器，访问 `edge://extensions/`
-2. 开启右上角的"开发者模式"
-3. 点击"加载已解压的扩展程序"，选择 `dist/chrome` 目录
-4. 建议固定扩展图标方便使用
+1. 打开 `chrome://extensions/`（Edge 为 `edge://extensions/`）
+2. 开启**开发者模式**
+3. 点击**加载已解压的扩展程序**，选择 `dist/chrome` 目录
+4. 建议固定扩展图标
 
 > Edge 基于 Chromium 内核，直接兼容 Chrome (MV3) 扩展。
 
 ### Firefox
 
-> ⚠️ **注意**：本扩展主要基于 Chrome (MV3) 开发和测试，Firefox 版本（MV2）为适配移植版本，可能存在未知 bug。如遇问题，请优先使用 Chrome / Edge 版本。
+> ⚠️ Firefox 版本（MV2）为适配移植版本，如遇问题请优先使用 Chrome / Edge。
 
 #### 方式一：从扩展商店安装（推荐）
 
-1. 打开 Firefox，访问 [Firefox 扩展商店](https://addons.mozilla.org/)
+1. 访问 [Firefox 扩展商店](https://addons.mozilla.org/)
 2. 搜索 **Legado Source Generator**
-3. 点击"添加到 Firefox"完成安装
+3. 点击"添加到 Firefox"
 
-#### 方式二：手动加载（开发/测试）
+#### 方式二：临时加载（开发/测试）
 
-1. 打开浏览器，访问 `about:debugging#/runtime/this-firefox`
-2. 点击"临时载入附加组件"
-3. 选择 `src-firefox/manifest.json` 文件
-4. 点击工具栏扩展图标即可打开侧边栏
+1. 访问 `about:debugging#/runtime/this-firefox`
+2. 点击**临时载入附加组件**
+3. 选择 `dist/firefox/manifest.json`
+
+---
+
+## AI 书源生成详解
+
+### 支持的 LLM 提供商
+
+| 提供商 | Base URL | 推荐模型 |
+|--------|----------|---------|
+| DeepSeek | `https://api.deepseek.com/v1` | `deepseek-chat` / `deepseek-reasoner` |
+| OpenAI | `https://api.openai.com/v1` | `gpt-4o` / `gpt-4o-mini` |
+| 自定义 | 任意兼容 OpenAI 格式的端点 | 按需填写 |
+
+### AI 设置步骤
+
+1. 打开侧边栏 → **AI 设置** 标签
+2. 填入 **API Key**（仅本地存储，不上传）
+3. 填入 **Base URL**（默认 DeepSeek）
+4. 填入 **模型名**（默认 `deepseek-chat`）
+5. 点击 **保存设置**
+
+### 使用流程
+
+1. 在浏览器中打开目标小说网站
+2. 打开扩展侧边栏 → **AI 生成** 标签
+3. URL 输入框会自动填充当前页面地址（可手动修改）
+4. 点击 **AI 生成书源**
+5. 等待 AI 分析页面并返回结果（约 10-30 秒）
+6. 查看生成的各字段，可点击 **Edit** 手动修改
+7. 点击 **应用到规则页** 将结果填入当前规则类型，或 **复制 JSON** 导出
+
+---
 
 ## 使用方法
 
-### 规则页（发现页 / 搜索页 / 详情页 / 目录页 / 正文页）
+### 规则页（搜索 / 书籍信息 / 目录 / 正文）
 
 1. 点击扩展图标打开侧边栏
-2. 填写书源名称和基础 URL
-3. 选择规则类型（发现页 / 搜索页 / 详情页 / 目录页 / 正文页）
-4. 点击"选择元素"开始点选：
-   - **列表字段**（书籍列表/章节列表）：选择两个同列表元素，自动取交集
-   - **普通字段**：直接点击目标元素
-5. 使用键盘快捷键精确调整：
-   - `↑` 移动到父元素
-   - `↓` 移动到第一个子元素
-   - `←` 移动到上一个兄弟元素
-   - `→` 移动到下一个兄弟元素
-   - `Enter` 确认选择
-   - `Esc` 取消选择
-6. 完成后点击"导出 JSON"获取书源规则
-7. 导入到阅读 APP
+2. 选择规则类型标签（搜索规则 / 书籍信息 / 目录规则 / 内容规则）
+3. 点击 **选择列表** 选择书籍列表/章节列表元素（可选）
+4. 按步骤填写各字段，点击 **选择元素** 后在页面上点选目标元素
+5. 完成后点击 **导出** 获取书源 JSON
+6. 导入到阅读 APP
 
-### 捕获搜索 URL
+### 调试
 
-如果当前页面有搜索功能，可以自动捕获搜索请求的 URL 格式。
+#### 连接设置
 
-1. 切换到"搜索URL"标签页
-2. 点击 **🔍 捕获** 按钮
-3. 页面提示"请点击网站的'搜索'按钮"，此时**点击网站页面的搜索按钮**（无需手动输入）
-4. 扩展会自动捕获请求，成功后表单自动填充：
-   - **请求方法**：GET / POST
-   - **charset**：自动检测（utf-8 / gbk / big5 等）
-   - **请求体**：POST 时显示，搜索词已替换为 `{{key}}`
-   - **搜索 URL**：自动生成 `{{key}}` 占位符
-5. 如需分页，点击 **{{page}}** 按钮插入页码占位符
-6. 表单内容实时同步到下方的搜索 URL 输入框
+阅读 APP → 我的 → Web服务 → 填入 IP 和端口号。
 
-> **提示**：
-> - GET 请求输出格式：`https://example.com/search?key={{key}}&page={{page}}`
-> - POST 请求输出格式：`https://example.com/search,{"charset":"gbk","method":"POST","body":"kw={{key}}&page={{page}}"}`
-> - 扩展支持多种字符编码（UTF-8、GBK、BIG5 等），捕获时自动检测
-> - 如未检测到搜索表单，表单各字段可手动填写
-
-### 发现页 URL
-
-发现页 URL 用于配置阅读 APP 首页的分类导航入口，支持可视化编辑和页面收集两种模式。
-
-#### 可视化编辑
-
-1. 切换到"发现页"标签页
-2. 点击"手动添加"逐条输入分类名称和 URL
-3. 点击"插入分隔"添加分隔符
-4. 卡片支持拖拽排序和拖拽调整宽度
-5. 右侧属性面板可调整 Flexbox 布局属性（flexGrow、flexShrink、alignSelf、flexBasisPercent、wrapBefore）
-6. 底部预览区实时显示生成的 JSON，支持"样式一"（每行 `title::url`）和"样式二"（JSON 数组）两种格式切换
-
-#### 从页面收集
-
-1. 在浏览器中打开目标网站（如小说网站的首页）
-2. 在侧边栏发现页标签下点击"从页面收集元素"
-3. 鼠标悬停在页面的分类/排行链接上，侧边栏预览区下方实时显示元素信息
-4. 点击链接即可收集，已收集项会显示蓝色闪烁提示
-5. 收集完成后按 `Enter` 完成收集，所有条目自动添加到列表
-6. **重要**：生成的 URL 通常不带分页参数，需要手动在 URL 中添加 `{{page}}` 占位符，例如将 `https://example.com/category/1` 改为 `https://example.com/category/{{page}}`，否则翻页不会生效
-
-#### 批量修改 URL
-
-收集或手动添加完成后，通常需要批量修改 URL 以适配阅读 APP 的分页机制。扩展提供两种批量修改模式：**模板匹配**和**正则匹配**。
-
-##### 前置操作
-
-1. 在发现页 URL 编辑器中，点击工具栏的 **"开启复选"** 勾选框
-2. 勾选需要修改 URL 的卡片（或使用 **"全选"** / **"反选"** 快速选择）
-3. 点击 **"批量改 URL"** 打开批量修改弹窗
-
-##### 模式一：模板匹配（推荐）
-
-模板匹配模式通过分类占位符和翻页模板自动替换 URL，适用于网站 URL 有明确分类和分页规律的场景。
-
-**字段说明：**
-
-| 字段 | 说明 |
-|------|------|
-| **分类匹配模板** | 以"第一页 URL"为基准，将分类部分替换为 `分类` 占位符，其余保持不变 |
-| **翻页模板** | 以"第二页（或分页页）URL"为基准，将分类部分替换为 `分类`，页码数字替换为 `页码` |
-| **第一页差异** | 当第一页 URL 与分页 URL 结构不同时，填写第一页多出来的那一段（含页码） |
-
-**规则 1：第一页与分页 URL 结构相同（仅页码数字不同）**
-
-此时"第一页差异"留空。例如：
-- 第一页：`https://www.example.com/fantasy/1`
-- 第二页：`https://www.example.com/fantasy/2`
-
-填写：
-- 分类匹配模板：`https://www.example.com/分类/1`
-- 翻页模板：`https://www.example.com/分类/页码`
-- 第一页差异：（留空）
-
-处理后：`https://www.example.com/fantasy/<,页码>` → 实际效果为 `https://www.example.com/fantasy/{{page}}`
-
-**规则 2：第一页与分页 URL 结构不同**
-
-当第一页没有页码变量时，"第一页差异"填写分页 URL 中多出来的那一段。例如：
-- 第一页：`https://www.example.com/fantasy/`
-- 第二页：`https://www.example.com/fantasy/index_2.html`
-
-填写：
-- 分类匹配模板：`https://www.example.com/分类/`
-- 翻页模板：`https://www.example.com/分类/index_页码.html`
-- 第一页差异：`index_页码.html`
-
-处理后：`https://www.example.com/fantasy/<,index_{{page}}.html>`
-
-**规则 3：分类和页码都在 URL 路径中**
-
-例如：
-- 第一页：`https://www.example.com/tags-150-0.html`（150 是分类 ID，0 表示第一页）
-- 第二页：`https://www.example.com/tags-150-1.html`
-
-填写：
-- 分类匹配模板：`https://www.example.com/tags-分类-0.html`
-- 翻页模板：`https://www.example.com/tags-分类-页码.html`
-- 第一页差异：（留空）
-
-处理后：`https://www.example.com/tags-150/<,{{page}}.html>`
-
-##### 模式二：正则匹配
-
-正则匹配模式使用自定义正则表达式进行 URL 替换，适用于更灵活或更复杂的替换需求。
-
-**字段说明：**
-
-| 字段 | 说明 |
-|------|------|
-| **正则表达式** | 匹配 URL 中需要替换的部分，如 `/sort/xuanhuan/` |
-| **替换为** | 替换后的内容，如 `/sort/分类/` |
-| **全局替换（g）** | 勾选后会替换所有匹配项（默认开启） |
-| **忽略大小写（i）** | 勾选后不区分大小写 |
-
-**示例：**
-
-将多个分类 URL 中的具体分类名统一替换为 `分类` 占位符：
-- 正则表达式：`xuanhuan|dushi|wuxia`
-- 替换为：`分类`
-- 全局替换：勾选
-
-或将 URL 中的分类 ID 替换为占位符：
-- 正则表达式：`/tags/(\d+)/`
-- 替换为：`/tags/分类/`
-
-##### 应用结果
-
-点击 **"应用到已选"** 后，系统会提示已更新的 URL 数量。修改结果会实时同步到预览区，可在导出 JSON 前确认格式正确。
-
-##### 批量修改 Layout 属性
-
-除了 URL，还支持批量修改卡片的 Flexbox 布局属性：
-
-1. 开启复选模式并选择目标卡片
-2. 点击 **"批量改 layout"**
-3. 勾选需要修改的属性并填写新值：
-   - `layout_flexGrow` — 卡片拉伸权重（默认 `1`）
-   - `layout_flexShrink` — 卡片收缩权重（默认 `0`）
-   - `layout_alignSelf` — 自对齐方式（默认 `auto`）
-   - `layout_flexBasisPercent` — 基础宽度百分比（`-1` 表示自动）
-   - `layout_wrapBefore` — 是否在此卡片前换行
-4. 点击 **"应用到已选"** 生效
-
-##### 样式模板管理
-
-样式模板用于快速统一卡片的 Flexbox 布局风格，支持新增、编辑、删除和设置默认模板。
-
-###### 新增模板
-
-1. 点击工具栏的 **"模板管理"** 按钮
-2. 在弹窗中点击 **"新增模板"**
-3. 填写模板名称（如"三列紧凑"、"两列宽屏"等），并设置各 layout 属性值：
-
-   | 属性 | 说明 | 默认值 |
-   |------|------|--------|
-   | `layout_flexGrow` | 卡片拉伸权重，值越大占空间越多 | `1` |
-   | `layout_flexShrink` | 空间不足时的收缩权重 | `0` |
-   | `layout_alignSelf` | 自对齐方式（auto / flex-start / flex-end / center 等） | `auto` |
-   | `layout_flexBasisPercent` | 基础宽度占总宽度的百分比，`-1` 表示自动等分 | `-1` |
-   | `layout_wrapBefore` | 是否在此卡片前换行，可实现独占一行效果 | `false` |
-
-4. 点击 **"保存模板"**
-
-###### 模板管理与默认模板
-
-在 **"模板管理"** 面板中：
-
-- **搜索**：顶部搜索框支持按模板名称快速过滤
-- **查看**：点击"查看"展开模板的详细属性
-- **编辑**：点击"编辑"修改模板名称和属性值
-- **设默认**：点击"设默认"将该模板标记为默认，后续手动添加的卡片将自动应用此模板的布局属性
-- **删除**：点击"删除"移除模板（至少保留一个）
-
-###### 应用样式模板
-
-1. 在发现页 URL 编辑器中，点击工具栏的 **"应用样式"** 按钮
-2. 在下拉菜单中选择目标模板
-3. 如果开启了复选模式，模板将应用到所有已勾选的卡片；否则应用到当前选中的单个卡片
-4. 点击 **"应用到已选"** 生效
-
-> **提示**：模板仅修改 layout 布局属性，不会覆盖卡片的标题和 URL。
-
-## 键盘快捷键
-
-### 规则页元素选择
-
-| 按键 | 操作 |
-|------|------|
-| Esc | 退出选择模式 |
-| Enter | 确认选择（列表字段需选两次） |
-| ↑ | 移动到父元素 |
-| ↓ | 移动到第一个子元素 |
-| ← | 移动到上一个兄弟元素 |
-| → | 移动到下一个兄弟元素 |
-
-### 发现页收集
-
-| 按键 | 操作 |
-|------|------|
-| Enter | 完成收集 |
-
-## 调试
-
-### 连接设置
-
-打开阅读 APP → 我的 → Web服务 → 填入 IP 和端口号。
-
-### 调试关键字
+#### 调试关键字
 
 | 格式 | 说明 |
 |------|------|
@@ -310,61 +148,31 @@
 
 留空时默认关键字为"我的"。
 
-### 日志调试（输入 / 输出）
+#### 日志调试
 
-**看输入** — 把这段加在规则最前面：
-
+**看输入** — 加在规则最前面：
 ```
 <js>java.log("输入" + result);</js>你的原规则
 ```
 
-**看输出** — 把这段加在规则最后面：
-
+**看输出** — 加在规则最后面：
 ```
 你的原规则<js>java.log("输出" + result);</js>
 ```
 
-> **向别人提问前一定要加上这两个再调试！！！** 调完删掉日志。
+### webView 说明
 
-### webView 是什么，什么时候开
+webView 让规则在渲染后的页面中执行，适合动态加载的网站。
 
-**webView 的作用**
-
-很多网站内容是动态加载的。不开 webView 时，规则可能抓不到最终页面内容。开了 webView，相当于"让页面先跑起来再抓"。
-
-**什么时候建议开**
-
-- 规则看起来没错，但结果一直空
-- 目录页、正文页总是抓不到
-- 下一页链接存在，但翻页不生效
-- 某字段不开拿不到，开了马上正常
-
-**什么时候不要开**
-
-- 已经能正常抓到，就不要开
-- 全字段都开会变慢，优先只开有问题的字段
-
-**新手推荐顺序**
-
-1. 先全部不开，先调规则
-2. 哪个字段有问题，只给哪个字段开 webView
-
-> **一句话结论**：能不开就不开，出问题再精准开启。
+- **建议开启**：规则看起来没错但结果一直空、目录/正文抓不到、翻页不生效
+- **不建议开启**：已能正常抓取的字段（开启会变慢）
+- **新手顺序**：先全部不开，有问题再精准开启
 
 ### 过 Cloudflare 盾
 
-部分小说网站使用了 Cloudflare（CF）5 秒盾防护，直接请求会返回 403 并要求人机验证。扩展提供了「开启过 Cloudflare 盾」选项，勾选后会在导出的书源中自动注入 `loginCheckJs` 规则。
+部分网站有 CF 5 秒盾，直接请求会 403。扩展提供"开启过 Cloudflare 盾"选项，勾选后自动注入 `loginCheckJs` 处理 CF 验证。
 
-**工作原理**
-
-1. 请求返回内容后，检测响应体是否包含 CF 验证特征（`_cf_`、`ge_ua`、`verify.php`）且状态码 ≥ 403
-2. 如果命中 CF 盾，清除已有 Cookie，调用 `java.startBrowserAwait()` 打开浏览器完成人机验证
-3. 验证通过后获取真实页面内容，继续正常解析
-
-**什么时候需要开**
-
-- 调试时被cloudflare人机验证拦截，无法获取内容
-- 普通请求能正常获取内容的网站**不需要开**
+---
 
 ## 错误提示
 
@@ -375,38 +183,66 @@
 - **空选择器**：未选择有效元素
 - **无匹配**：选择器返回零个元素
 
+---
+
 ## 项目结构
 
 ```
-src/                    # Chrome / Edge 版本 (MV3)
-├── manifest.json          # 扩展配置
-├── background.js          # Service Worker（点击图标打开侧边栏）
-├── content/
-│   ├── picker.js          # 元素选择器逻辑
-│   └── picker.css         # 选择器样式
-├── popup/
-│   ├── index.html         # 侧边栏界面
-│   ├── popup.js           # 侧边栏逻辑（规则页状态管理、导出）
-│   ├── popup.css          # 侧边栏样式
-│   ├── explore-url-editor.js  # 发现页 URL 编辑器（收集、批量修改、样式模板）
-│   └── batch-url-utils.js     # 批量 URL 替换工具（模板匹配 / 正则匹配）
-└── lib/
-    └── selector-generator.js  # CSS 选择器生成算法
+src/
+├── manifest.json              # 扩展配置 (MV3)
+├── background/                # Service Worker
+├── content/                   # Content Script
+├── core/
+│   ├── ai-fetch.ts            # AI 爬取与 LLM 调用
+│   ├── ai-parser.ts           # AI 响应解析
+│   ├── check-update.ts        # 版本检查
+│   ├── explore-url.ts         # 探索 URL 管理
+│   ├── import-export.ts       # 书源导入导出
+│   ├── indexed-rule.ts        # 索引规则生成
+│   ├── quick-snippet.ts       # 快速片段
+│   ├── search-capture.ts      # 搜索 URL 捕获
+│   └── selector-generator.ts  # CSS 选择器生成
+├── injected/                  # 页面注入脚本
+├── platform/                  # 平台抽象层
+├── popup/                     # Popup 入口
+├── sidepanel/                 # SidePanel 入口
+├── store/                     # Zustand 状态管理
+├── types/                     # TypeScript 类型定义
+└── ui/
+    ├── components/
+    │   ├── AiPanel.tsx        # AI 生成面板
+    │   ├── AiSettings.tsx     # AI 设置面板
+    │   ├── CategoryTree.tsx   # 分类树编辑器
+    │   ├── DebugPanel.tsx     # 调试面板
+    │   ├── ExploreCardGrid.tsx # 发现页 URL 卡片网格
+    │   ├── FieldEditor.tsx    # 单字段编辑器
+    │   └── common/            # 通用 UI 组件
+    └── pages/
+        ├── Popup.tsx          # Popup 主页面
+        └── SidePanel.tsx      # 侧边栏主页面
 
-src-firefox/            # Firefox 版本 (MV2)
-├── manifest.json          # 扩展配置
-├── background.js          # 后台脚本
-├── content/
-│   ├── picker.js
-│   └── picker.css
-├── popup/
-│   ├── index.html
-│   ├── popup.js
-│   ├── explore-url-editor.js
-│   └── batch-url-utils.js
-└── lib/
-    └── selector-generator.js
+tests/
+└── unit/
+    └── ai-fetch.test.ts       # AI 功能单元测试
+```
 
-tests/                  # 测试
-└── batch-url-utils.test.js  # 批量 URL 工具单元测试
+---
+
+## 开发
+
+```bash
+# 安装依赖
+pnpm install
+
+# 开发模式（同时启动 Chrome 和 Firefox 构建）
+pnpm dev
+
+# 构建
+pnpm build:chrome   # Chrome MV3
+pnpm build:firefox  # Firefox MV2
+
+# 代码检查
+pnpm lint
+pnpm typecheck
+pnpm test:unit
 ```
