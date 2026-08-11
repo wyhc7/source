@@ -29,7 +29,7 @@ function manifestGeneratorPlugin() {
           48: 'icons/icon-48.svg',
           128: 'icons/icon-128.svg'
         },
-        permissions: ['storage', 'scripting', 'activeTab', 'sidePanel'],
+        permissions: ['storage', 'scripting', 'activeTab', 'sidePanel', 'downloads'],
         host_permissions: ['http://*/*', 'https://*/*'],
         background: {
           service_worker: 'background.js'
@@ -70,7 +70,7 @@ function manifestGeneratorPlugin() {
           48: 'icons/icon-48.svg',
           128: 'icons/icon-128.svg'
         },
-        permissions: ['storage', 'activeTab', 'tabs', 'sidebarAction'],
+        permissions: ['storage', 'activeTab', 'tabs', 'sidebarAction', 'downloads'],
         optional_permissions: ['http://*/*', 'https://*/*'],
         background: {
           scripts: ['background.js'],

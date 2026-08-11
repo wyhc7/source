@@ -4,6 +4,10 @@ export interface LatestRelease {
   html_url: string;
   published_at: string;
   body?: string;
+  assets: Array<{
+    name: string;
+    browser_download_url: string;
+  }>;
 }
 
 export interface UpdateResult {
@@ -11,11 +15,25 @@ export interface UpdateResult {
   currentVersion: string;
   latestVersion: string;
   releaseUrl: string;
+  downloadUrl?: string;
   error?: string;
 }
 
 const GITHUB_REPO = 'wyhc7/source';
 const RELEASES_API = `https://api.github.com/repos/${GITHUB_REPO}/releases/latest`;
+
+function detectPlatform(): 'chrome' | 'firefox' {
+  const manifest = typeof chrome !== 'undefined' && chrome.runtime?.getManifest?.();
+  const m = (manifest as any)?.manifest_version;
+  if (m === 2) return 'firefox';
+  return 'chrome';
+}
+
+export function getPlatformDownloadUrl(assets: LatestRelease['assets']): string | undefined {
+  const platform = detectPlatform();
+  const keyword = platform === 'firefox' ? 'firefox' : 'chrome';
+  return assets.find(a => a.name.includes(keyword))?.browser_download_url;
+}
 
 function compareVersions(a: string, b: string): number {
   const parse = (v: string) => v.replace(/^v/, '').split('.').map(n => parseInt(n, 10) || 0);
@@ -61,7 +79,8 @@ export async function checkForUpdate(currentVersion: string): Promise<UpdateResu
       hasUpdate,
       currentVersion,
       latestVersion: latestTag,
-      releaseUrl: data.html_url
+      releaseUrl: data.html_url,
+      downloadUrl: getPlatformDownloadUrl(data.assets || [])
     };
   } catch (e) {
     return {
@@ -71,5 +90,29 @@ export async function checkForUpdate(currentVersion: string): Promise<UpdateResu
       releaseUrl: '',
       error: (e as Error).message || '检查更新失败'
     };
+  }
+}
+
+export async function downloadLatestRelease(url: string): Promise<boolean> {
+  try {
+    if (typeof chrome !== 'undefined' && chrome.downloads) {
+      const id = await new Promise<number>((resolve, reject) => {
+        chrome.downloads.download({ url, saveAs: false }, (downloadId?: number) => {
+          if (chrome.runtime?.lastError) reject(chrome.runtime.lastError);
+          else resolve(downloadId as number);
+        });
+      });
+      return id >= 0;
+    }
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = '';
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    return true;
+  } catch {
+    window.open(url, '_blank');
+    return true;
   }
 }

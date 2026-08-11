@@ -257,6 +257,34 @@
   opacity: 0.8;
 }
 
+.popup__update-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.popup__update-download-btn {
+  background: var(--color-success);
+  color: #fff;
+  border: none;
+  padding: 2px 10px;
+  border-radius: 4px;
+  font-size: 12px;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.popup__update-download-btn:hover {
+  opacity: 0.85;
+}
+
+.popup__update-download-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
 .popup__update-banner--error {
   background: var(--color-error-bg);
   color: var(--color-error);

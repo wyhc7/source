@@ -5,7 +5,7 @@ import { FieldEditor } from '@ui/components/FieldEditor';
 import { ExploreCardGrid } from '@ui/components/ExploreCardGrid';
 import { CategoryTree } from '@ui/components/CategoryTree';
 import { importBookSource } from '@core/import-export';
-import { checkForUpdate } from '@core/check-update';
+import { checkForUpdate, downloadLatestRelease } from '@core/check-update';
 import { AiPanel } from '@ui/components/AiPanel';
 import { AiSettings } from '@ui/components/AiSettings';
 import { getFieldLabel } from '@ui/field-labels';
@@ -50,7 +50,9 @@ export function Popup() {
   const [checkUpdateState, setCheckUpdateState] = useState<'idle' | 'checking' | 'ok' | 'update' | 'error'>('idle');
   const [updateVersion, setUpdateVersion] = useState('');
   const [updateReleaseUrl, setUpdateReleaseUrl] = useState('');
+  const [updateDownloadUrl, setUpdateDownloadUrl] = useState('');
   const [updateError, setUpdateError] = useState('');
+  const [updateDownloading, setUpdateDownloading] = useState(false);
   const [showAiPanel, setShowAiPanel] = useState(false);
   const [showAiSettings, setShowAiSettings] = useState(false);
 
@@ -135,12 +137,22 @@ export function Popup() {
       setCheckUpdateState('update');
       setUpdateVersion(result.latestVersion);
       setUpdateReleaseUrl(result.releaseUrl);
+      setUpdateDownloadUrl(result.downloadUrl || '');
     } else if (result.error) {
       setCheckUpdateState('error');
       setUpdateError(result.error);
     } else {
       setCheckUpdateState('ok');
     }
+  };
+
+  const handleDownload = async () => {
+    if (!updateDownloadUrl) return;
+    setUpdateDownloading(true);
+    const ok = await downloadLatestRelease(updateDownloadUrl);
+    setUpdateDownloading(false);
+    if (ok) showToast('已自动下载，解压后重新加载扩展即可', 'success');
+    else showToast('下载失败，请手动下载', 'error');
   };
 
   if (activeRuleType === 'explore') {
@@ -280,8 +292,8 @@ export function Popup() {
 
       {checkUpdateState !== 'idle' && checkUpdateState !== 'checking' && checkUpdateState !== 'error' && (
         <div className="popup__update-banner popup__update-banner--ok">
-          {checkUpdateState === 'update'
-            ? (
+          {checkUpdateState === 'update' ? (
+            <div className="popup__update-row">
               <a
                 className="popup__update-link"
                 href={updateReleaseUrl || 'https://github.com/wyhc7/source/releases'}
@@ -290,8 +302,17 @@ export function Popup() {
               >
                 {i18n.getMessage('newVersionAvailable', [updateVersion])}
               </a>
-            )
-            : i18n.getMessage('noUpdate')}
+              {updateDownloadUrl && (
+                <button
+                  className="popup__update-download-btn"
+                  onClick={handleDownload}
+                  disabled={updateDownloading}
+                >
+                  {updateDownloading ? '下载中...' : '一键更新'}
+                </button>
+              )}
+            </div>
+          ) : i18n.getMessage('noUpdate')}
         </div>
       )}
       {checkUpdateState === 'error' && (
